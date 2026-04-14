@@ -348,7 +348,9 @@ This keeps the user informed since browser automation can feel like a black box.
 
 ### Write the Setup Summary
 
-When all steps are complete, write a `.gcp-setup.md` file in the project root:
+When all steps are complete, write a `.gcp-setup.md` file in the project root.
+
+**The summary MUST include a verification table** — a Markdown table where every resource has a direct GCP Console link so the user can click through and confirm it exists. Build the links by substituting the real project ID, service account email, etc. into the URL patterns.
 
 ```markdown
 # GCP Setup Summary
@@ -377,9 +379,27 @@ Generated: YYYY-MM-DD
 - Client ID: XXXX.apps.googleusercontent.com
 - Redirect URIs: http://localhost:3000/callback
 
+## Verification — click to confirm
+
+| What | Value | Verify |
+|---|---|---|
+| Project | `my-app-prod` | [Console](https://console.cloud.google.com/home/dashboard?project=my-app-prod) |
+| APIs | Cloud Run, Artifact Registry, Secret Manager | [Enabled APIs](https://console.cloud.google.com/apis/dashboard?project=my-app-prod) |
+| Service account: ci-deployer | `ci-deployer@my-app-prod.iam.gserviceaccount.com` | [View SA](https://console.cloud.google.com/iam-admin/serviceaccounts?project=my-app-prod) |
+| Service account: app-runtime | `app-runtime@my-app-prod.iam.gserviceaccount.com` | [View SA](https://console.cloud.google.com/iam-admin/serviceaccounts?project=my-app-prod) |
+| IAM bindings | All roles assigned | [IAM](https://console.cloud.google.com/iam-admin/iam?project=my-app-prod) |
+| OAuth client | `XXXX.apps.googleusercontent.com` | [Credentials](https://console.cloud.google.com/apis/credentials?project=my-app-prod) |
+| Billing | Linked | [Billing](https://console.cloud.google.com/billing?project=my-app-prod) |
+
 ## Notes
 Add any manual follow-up steps or reminders here.
 ```
+
+**Rules for the verification table:**
+- Include a row for **every resource created** in this session — project, each API, each service account, OAuth clients, billing, Cloud Run services, etc.
+- The "Verify" link must go directly to the relevant GCP Console page with `?project=PROJECT_ID` appended so it opens in the right project context.
+- Use the real values, not placeholders. If a value is a secret (like a client secret), write "stored securely" instead.
+- If no OAuth was configured, omit the OAuth row. Only include rows for things that were actually set up.
 
 Tell the user: "I've written a `.gcp-setup.md` summary to your project root. Add it to `.gitignore` if it contains sensitive values — or keep it for reference."
 
