@@ -1,0 +1,9 @@
+{
+  "name": "gcp-setup",
+  "description": "Automates Google Cloud Console setup via browser. Walks through project creation, API enabling, service accounts, IAM, billing, OAuth, Cloud Run, and firewall config — click by click. Auto-detects requirements from your codebase when invoked mid-feature.",
+  "version": "1.1.0",
+  "author": {
+    "name": "N-O-P-E"
+  },
+  "tags": ["browser-automation", "gcp", "google-cloud", "devops", "cloud-run"]
+}
