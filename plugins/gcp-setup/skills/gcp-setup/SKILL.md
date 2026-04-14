@@ -24,12 +24,29 @@ allowed-tools:
 
 Walks through Google Cloud Console in the browser so the user doesn't have to click through dozens of screens. The user describes what they need, you figure out the steps, then drive Chrome through each one.
 
+---
+
+## Before You Start
+
+Check these before opening the browser. If anything is missing, tell the user what to do first.
+
+**You need:**
+- [ ] Chrome browser running
+- [ ] Chrome DevTools MCP extension active and connected (verify with `list_pages`)
+- [ ] A Google account with access to GCP
+- [ ] A billing account (if creating a new project or enabling paid APIs)
+- [ ] Your organization ID (if working within a Google Workspace org — find it at `https://console.cloud.google.com/cloud-resource-manager`)
+
+**Check for an existing setup summary:** look for `.gcp-setup.md` in the project root. If it exists, read it — it may contain project IDs, service account emails, and previously enabled APIs that let you skip questions and avoid duplicating work.
+
+---
+
 ## Invocation Modes
 
 This skill works in two modes:
 
 ### Mode 1: Direct invocation (`/gcp-setup`)
-The user explicitly asks to set up GCP. Start with Discovery Phase 1 below.
+The user explicitly asks to set up GCP. Start with the Common Setups section below, then Discovery.
 
 ### Mode 2: Context-aware invocation (`/gcp-setup` during feature work)
 You're mid-feature (building an app, deploying a service, etc.) and realize GCP infrastructure is needed — or the user invokes `/gcp-setup` after you've told them what cloud resources the feature requires.
@@ -42,6 +59,7 @@ In this mode, **skip most discovery questions** because you already know the ans
    - Check for existing GCP config files (`app.yaml`, `cloudbuild.yaml`, `.gcloudignore`, `Dockerfile`, environment variables referencing `GOOGLE_CLOUD_PROJECT`, etc.)
    - Look at package.json, requirements.txt, go.mod, etc. for GCP SDK dependencies
    - Check for existing service account references in CI/CD configs (`.github/workflows/`, `Makefile`, etc.)
+   - See `references/codebase-signals.md` for the full lookup table
 3. **Present what you've figured out:**
 
 ```
@@ -66,7 +84,7 @@ I still need to know:
 Can you fill in the blanks?
 ```
 
-4. **Only ask about what you genuinely don't know.** If the project ID is in an env file, don't ask for it. If the region is in a deploy config, don't ask for it. The whole point of this mode is that you've been working on the feature — use that knowledge.
+4. **Only ask about what you genuinely don't know.** If the project ID is in an env file, don't ask for it. If the region is in a deploy config, don't ask for it.
 5. Once the user confirms, proceed to Phase 2 (Execution) as normal.
 
 ---
@@ -87,15 +105,55 @@ There are two strict phases: **Discovery** (gather everything, no browser) and *
 
 ---
 
+## Common Setups
+
+For direct invocations, offer presets before asking detailed questions. Use `AskUserQuestion`:
+
+```
+question: "What are you trying to set up?"
+header: "GCP Setup"
+options:
+  - label: "Standard web app"
+    description: "Cloud Run + Secret Manager + Artifact Registry. Full deployment pipeline."
+  - label: "CI/CD deployment pipeline"
+    description: "Service account + Artifact Registry + GitHub Actions secret. Automates deploys."
+  - label: "Full project from scratch"
+    description: "New project + billing + APIs + service accounts. The whole thing."
+  - label: "Something specific"
+    description: "I'll describe what I need — you figure out the steps."
+```
+
+**Standard web app** preset defaults:
+- APIs: `run.googleapis.com`, `artifactregistry.googleapis.com`, `secretmanager.googleapis.com`, `cloudbuild.googleapis.com`
+- Service account: `app-runtime` with `roles/secretmanager.secretAccessor`, `roles/run.invoker`
+- Service account: `ci-deployer` with `roles/run.admin`, `roles/artifactregistry.writer`, `roles/iam.serviceAccountUser`
+
+**CI/CD deployment pipeline** preset defaults:
+- APIs: `artifactregistry.googleapis.com`, `run.googleapis.com`, `iam.googleapis.com`
+- Service account: `ci-deployer` with `roles/run.admin`, `roles/artifactregistry.writer`, `roles/iam.serviceAccountUser`
+- Output: JSON key downloaded and ready to paste into GitHub Actions secrets
+
+For presets, confirm the defaults with the user before proceeding:
+
+```
+question: "For a standard web app I'll set up: Cloud Run, Secret Manager, Artifact Registry, and two service accounts (app-runtime + ci-deployer). Does that match what you need?"
+header: "Confirm preset"
+options:
+  - label: "Yes, that's right"
+    description: "Proceed with these defaults"
+  - label: "Mostly right — let me adjust"
+    description: "I'll walk through each part"
+```
+
+---
+
 ## Phase 1: Discovery
 
-The goal is to collect every piece of information needed before touching the browser. GCP setup varies wildly — a simple "enable an API" is 3 clicks, but a full project bootstrap with IAM, billing, OAuth, and deployments is 50+ steps. You need to know exactly what you're building before you start.
+The goal is to collect every piece of information needed before touching the browser.
 
 ### Step 1: Understand the Goal
 
-Ask the user what they're trying to accomplish. They might say something vague like "set up GCP for my app" or something specific like "I need Cloud Run with a service account that has BigQuery read access."
-
-From their answer, identify which **setup domains** are involved. Read the relevant reference file(s) to understand what information you'll need:
+From their answer, identify which **setup domains** are involved. Read the relevant reference file(s):
 
 | Domain | Reference File | Key Info Needed |
 |--------|---------------|-----------------|
@@ -108,31 +166,61 @@ From their answer, identify which **setup domains** are involved. Read the relev
 | Cloud Run | `references/cloud-run.md` | Service name, region, container |
 | Firewall / VPC | `references/networking.md` | Rules, ranges, protocols |
 
-### Step 2: Ask Clarifying Questions
+### Step 2: Check What Already Exists
 
-Based on the domains involved, ask the user everything you need. Use `AskUserQuestion` for structured choices and direct conversation for open-ended details.
+Before asking questions, check what's already set up to avoid duplicating work:
 
-**You must ask about:**
-- Project name (or whether to use an existing project)
-- Which APIs to enable (suggest common ones based on their use case)
-- Whether they need service accounts (and what permissions)
-- Whether billing needs to be linked or configured
-- Any OAuth/credential setup needed
+- If you have a project ID, check whether APIs are already enabled: navigate to `https://console.cloud.google.com/apis/dashboard?project=PROJECT_ID` and take a snapshot — look for APIs already showing as "Enabled"
+- If you have a service account name, check whether it already exists: navigate to `https://console.cloud.google.com/iam-admin/serviceaccounts?project=PROJECT_ID`
+- Check `.env`, `.env.example`, `app.yaml`, CI configs for project ID, region, and service account references that mean things are already configured
 
-**Keep asking until you can answer "yes" to all of these:**
+When you find something already set up, say so:
+
+```
+I can see Cloud Run API is already enabled on this project. I'll skip that step.
+The service account "ci-deployer" already exists — I'll check its roles and add what's missing.
+```
+
+### Step 3: Ask Clarifying Questions
+
+Based on the domains involved, ask what you still need to know. Use `AskUserQuestion` for structured choices:
+
+```
+question: "Do you have an existing GCP project, or should I create a new one?"
+header: "Project"
+options:
+  - label: "Use existing project"
+    description: "I have a project ID already"
+  - label: "Create a new project"
+    description: "I need a brand new project"
+```
+
+```
+question: "Which region should services run in?"
+header: "Region"
+options:
+  - label: "Europe West 1 (Belgium)"
+    description: "europe-west1 — good for EU users"
+  - label: "Europe West 4 (Netherlands)"
+    description: "europe-west4"
+  - label: "US Central 1 (Iowa)"
+    description: "us-central1 — lowest latency for US"
+  - label: "Other"
+    description: "I'll type the region"
+```
+
+**You must be able to answer "yes" to all of these before continuing:**
 - [ ] I know exactly which GCP project to use or create
-- [ ] I know every API that needs to be enabled
+- [ ] I know every API that needs to be enabled (and which are already on)
 - [ ] I know every service account, its name, and its roles
 - [ ] I know whether billing setup is needed and which account to use
 - [ ] I know every IAM binding to create
 - [ ] I know all OAuth/credential details if applicable
 - [ ] I know the target region for any deployable services
 
-If the user says something ambiguous like "just the usual APIs," don't guess — ask which specific APIs. GCP has hundreds of them and enabling the wrong ones wastes quota and creates confusion.
+### Step 4: Present the Plan
 
-### Step 3: Present the Plan
-
-Once you have everything, present a clear numbered list of what you're going to do:
+Once you have everything, present a clear numbered list:
 
 ```
 Here's what I'll set up in GCP:
@@ -140,6 +228,7 @@ Here's what I'll set up in GCP:
 1. Create project "my-app-prod" in organization "example.com"
 2. Link billing account "My Billing Account"
 3. Enable APIs: Cloud Run, Cloud Build, Artifact Registry, Secret Manager
+   (Cloud Storage is already enabled — skipping)
 4. Create service account "ci-deployer@my-app-prod.iam.gserviceaccount.com"
    - Roles: Cloud Run Admin, Artifact Registry Writer
 5. Create OAuth consent screen (External, app name "My App")
@@ -257,6 +346,43 @@ After completing each major step, report to the user:
 
 This keeps the user informed since browser automation can feel like a black box.
 
+### Write the Setup Summary
+
+When all steps are complete, write a `.gcp-setup.md` file in the project root:
+
+```markdown
+# GCP Setup Summary
+Generated: YYYY-MM-DD
+
+## Project
+- **Project ID**: my-app-prod
+- **Project Number**: 123456789
+- **Organization**: example.com
+- **Region**: europe-west1
+
+## APIs Enabled
+- Cloud Run (`run.googleapis.com`)
+- Artifact Registry (`artifactregistry.googleapis.com`)
+- Secret Manager (`secretmanager.googleapis.com`)
+- Cloud Build (`cloudbuild.googleapis.com`)
+
+## Service Accounts
+- `ci-deployer@my-app-prod.iam.gserviceaccount.com`
+  - Roles: Cloud Run Admin, Artifact Registry Writer, Service Account User
+  - Key: downloaded to ~/Downloads/my-app-prod-ci-deployer-XXXX.json
+- `app-runtime@my-app-prod.iam.gserviceaccount.com`
+  - Roles: Secret Manager Secret Accessor
+
+## OAuth
+- Client ID: XXXX.apps.googleusercontent.com
+- Redirect URIs: http://localhost:3000/callback
+
+## Notes
+Add any manual follow-up steps or reminders here.
+```
+
+Tell the user: "I've written a `.gcp-setup.md` summary to your project root. Add it to `.gitignore` if it contains sensitive values — or keep it for reference."
+
 ---
 
 ## Starting the Browser
@@ -342,5 +468,7 @@ gcloud org-policies delete iam.disableServiceAccountKeyCreation \
 4. **Direct URLs over clicking menus.** GCP's sidebar navigation is deep and inconsistent. URL navigation is deterministic.
 5. **One action at a time.** Don't try to batch multiple clicks or fills. GCP Console is async and things break when you rush.
 6. **Announce manual steps clearly.** Don't just say "please do this" — explain what screen they should see, what button to click, and what the result should look like.
-7. **Proactively check for org policy blockers.** If the plan includes service account key creation, warn about Secure by Default and include the gcloud fix commands in the plan upfront.
-8. **Include gcloud commands as fallback.** Some GCP operations are easier or only possible via CLI. When browser automation hits a permissions wall, offer the gcloud command immediately rather than trying to work around it in the UI.
+7. **Check before creating.** If something might already exist (API enabled, service account created), verify first. Skip the step if it's already done.
+8. **Proactively check for org policy blockers.** If the plan includes service account key creation, warn about Secure by Default and include the gcloud fix commands in the plan upfront.
+9. **Include gcloud commands as fallback.** Some GCP operations are easier or only possible via CLI. When browser automation hits a permissions wall, offer the gcloud command immediately rather than trying to work around it in the UI.
+10. **Always write the setup summary.** End every session with `.gcp-setup.md` so the next invocation — and the user — has a clear record of what was set up.
