@@ -8,6 +8,7 @@ Claude Code plugins by [Studio N.O.P.E.](https://github.com/N-O-P-E).
 | Plugin | Description |
 |--------|-------------|
 | **gcp-setup** | Automates Google Cloud Console setup via browser. Walks through project creation, API enabling, service accounts, IAM, billing, OAuth, Cloud Run, and firewall config. |
+| **search-console** | Audits Google Search Console via browser. Surfaces indexing issues, sitemap gaps, Core Web Vitals, structured data warnings, and merchant listing problems — then gives actionable fixes including Shopify-specific structured data implementation. |
 
 ## Install
 
@@ -30,12 +31,23 @@ The `gcp-setup` plugin requires:
 - Chrome browser running
 - A Google account with access to GCP
 
+The `search-console` plugin requires:
+- Chrome DevTools MCP plugin installed and connected
+- Chrome browser running
+- Already signed in to Google Search Console in Chrome
+
 ## How gcp-setup works
 
 1. **Discovery:** Gathers all requirements before touching the browser. If invoked mid-feature, it auto-detects GCP needs from your codebase (package dependencies, config files, env vars).
 2. **Planning:** Presents a numbered plan of every step, flagging which ones require manual action (auth, billing confirmation).
 3. **Execution:** Opens Chrome and walks through GCP Console step by step, taking screenshots to verify each action.
 4. **Manual handoffs:** Pauses for Google sign-in, billing confirmation, 2FA, and terms acceptance.
+
+## How search-console works
+
+1. **Audit:** Opens GSC in Chrome and reads every report — indexing, sitemaps, Core Web Vitals, product snippets, merchant listings, security.
+2. **Report:** Returns a prioritised P0→P3 fix list with root causes and verification steps.
+3. **Fix guidance:** Includes Shopify-specific fixes for structured data warnings, including a ready-to-use `structured-data.liquid` pattern that covers all page types from a single snippet.
 
 ## About Studio N.O.P.E.
 

@@ -1,0 +1,8 @@
+{
+  "name": "search-console",
+  "description": "Audits Google Search Console via browser automation. Surfaces indexing issues, sitemap gaps, Core Web Vitals, structured data errors, and merchant listing problems — then gives actionable fixes.",
+  "version": "1.0.0",
+  "author": {
+    "name": "N-O-P-E"
+  }
+}
