@@ -1,6 +1,8 @@
 # Studio N.O.P.E. Claude Marketplace
 *We are Not Of Planet Earth*
 
+![Claude Code × Google Search & Cloud — open-source integration for AI, SEO, and infrastructure](assets/banner.png)
+
 ## About Studio N.O.P.E.
 
 Creative Solution Engineers using AI's infinite possibilities to help humans realise their dreams.
