@@ -24,16 +24,41 @@ Install a plugin:
 /plugin install gcp-setup@nope-marketplace
 ```
 
+## Chrome DevTools MCP
+
+Both `gcp-setup` and `search-console` drive Chrome via the [chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp) server. Set it up once and both plugins work.
+
+**1. Add to your Claude Code MCP config:**
+
+```json
+{
+  "mcpServers": {
+    "chrome-devtools-mcp": {
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"]
+    }
+  }
+}
+```
+
+Add this to `~/.claude/settings.json` (global) or `.claude/settings.json` (project-level). In Claude Code you can also run:
+
+```
+/mcp add chrome-devtools-mcp -- npx chrome-devtools-mcp@latest
+```
+
+**2. Start Chrome** — the MCP server launches it automatically on first use, or connect to an already-running Chrome instance.
+
+**3. Verify it's working** — Claude will call `list_pages` at the start of any browser task. If it fails, see the [troubleshooting guide](https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/main/docs/troubleshooting.md).
+
 ## Requirements
 
 The `gcp-setup` plugin requires:
-- Chrome DevTools MCP plugin installed and connected
-- Chrome browser running
+- Chrome DevTools MCP configured (see above)
 - A Google account with access to GCP
 
 The `search-console` plugin requires:
-- Chrome DevTools MCP plugin installed and connected
-- Chrome browser running
+- Chrome DevTools MCP configured (see above)
 - Already signed in to Google Search Console in Chrome
 
 ## How gcp-setup works
