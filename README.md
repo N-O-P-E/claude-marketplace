@@ -25,7 +25,7 @@ Want to work with us? We help teams build smarter workflows with AI-powered tool
 Add the marketplace to Claude Code:
 
 ```
-/plugin marketplace add n-o-p-e/claude-marketplace
+/plugin marketplace add n-o-p-e/nope-marketplace
 ```
 
 Install a plugin:

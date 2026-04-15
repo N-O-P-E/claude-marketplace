@@ -10,9 +10,9 @@ Invoke it directly when setting up a new project, or mid-feature when you realis
 /plugin install gcp-setup@nope-marketplace
 ```
 
-Requires the [N-O-P-E marketplace](https://github.com/N-O-P-E/claude-marketplace):
+Requires the [N-O-P-E marketplace](https://github.com/N-O-P-E/nope-marketplace):
 ```
-/plugin marketplace add n-o-p-e/claude-marketplace
+/plugin marketplace add n-o-p-e/nope-marketplace
 ```
 
 ## Requirements

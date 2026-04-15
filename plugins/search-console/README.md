@@ -8,9 +8,9 @@ Audits Google Search Console via browser automation. Reads every report that mat
 /plugin install search-console@nope-marketplace
 ```
 
-Requires the [N-O-P-E marketplace](https://github.com/N-O-P-E/claude-marketplace):
+Requires the [N-O-P-E marketplace](https://github.com/N-O-P-E/nope-marketplace):
 ```
-/plugin marketplace add n-o-p-e/claude-marketplace
+/plugin marketplace add n-o-p-e/nope-marketplace
 ```
 
 ## Requirements

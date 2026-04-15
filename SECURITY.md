@@ -9,7 +9,7 @@ Thanks for helping keep Studio N.O.P.E. and its users safe.
 If you believe you've found a security issue in any plugin in this marketplace, report it privately:
 
 - **Email:** [info@studionope.nl](mailto:info@studionope.nl) with subject line `SECURITY: <short description>`
-- **GitHub:** Use [private vulnerability reporting](https://github.com/N-O-P-E/claude-marketplace/security/advisories/new) on this repository
+- **GitHub:** Use [private vulnerability reporting](https://github.com/N-O-P-E/nope-marketplace/security/advisories/new) on this repository
 
 Please include:
 
