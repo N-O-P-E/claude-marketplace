@@ -29,7 +29,7 @@ Opens Google Search Console in the browser and reads every report that matters f
 1. Call `list_pages` to verify Chrome DevTools MCP is connected.
 2. If it fails: "Please open Chrome and make sure the DevTools MCP extension is active."
 3. Confirm the domain to audit. If not already known, ask:
-   - "What domain should I audit? (e.g. https://perfectpillows.nl/)"
+   - "What domain should I audit? (e.g. https://example.com/)"
 4. The user must already be signed in to Google Search Console in Chrome. If not, tell them to sign in first — you cannot handle Google authentication.
 
 ---
