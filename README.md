@@ -1,7 +1,15 @@
 # Studio N.O.P.E. Claude Marketplace
 *We are Not Of Planet Earth*
 
-Claude Code plugins by [Studio N.O.P.E.](https://github.com/N-O-P-E) — we automate the browser clicks, configuration loops, and setup handholding so you stay in flow and ship what actually matters. Every plugin here is something we use ourselves.
+## About Studio N.O.P.E.
+
+Creative Solution Engineers using AI's infinite possibilities to help humans realise their dreams.
+
+We're [@tijsluitse](https://github.com/tijsluitse) and [@basfijneman](https://github.com/basfijneman) — two guys who believe the best tools are the ones that get out of your way. We built this marketplace because setup shouldn't require clicking through a dozen consoles and copy-pasting from stale docs. It should be one command, some sensible defaults, done — with tools you can read, fork, and shape.
+
+We made this open source because we think everybody deserves useful tools, not just the people who can afford them. When you can automate the boring parts without friction, you ship more of what actually matters. Open source means the community can shape this into exactly what they need.
+
+Want to work with us? We help teams build smarter workflows with AI-powered tooling, Shopify development, and creative engineering. Reach out at [info@studionope.nl](mailto:info@studionope.nl) or visit [studionope.nl](https://studionope.nl).
 
 ## Plugins
 
@@ -48,11 +56,9 @@ Or via Claude Code:
 
 Chrome launches automatically on first use. If something goes wrong, see the [troubleshooting guide](https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/main/docs/troubleshooting.md).
 
-## About
+## Security
 
-We're [@tijsluitse](https://github.com/tijsluitse) and [@basfijneman](https://github.com/basfijneman) — creative solution engineers using AI to help humans realise their dreams.
-
-Want to work with us? We help teams build smarter workflows with AI-powered tooling, Shopify development, and creative engineering. Reach out at [info@studionope.nl](mailto:info@studionope.nl) or visit [studionope.nl](https://studionope.nl).
+Found a vulnerability? See [SECURITY.md](SECURITY.md) for how to report it.
 
 ## License
 
