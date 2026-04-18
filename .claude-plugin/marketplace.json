@@ -30,6 +30,14 @@
       "version": "1.0.0",
       "category": "development",
       "tags": ["browser-automation", "cloudflare", "dns", "railway", "vercel", "subdomains"]
+    },
+    {
+      "name": "gtm-workflow",
+      "source": "./plugins/gtm-workflow",
+      "description": "Inspect, verify, edit, preview and publish Google Tag Manager containers via browser automation. Reads full container state, injects a dataLayer hook on the live site to prove events fire into GA4 / Meta / Pinterest / Clarity, and drives the GTM UI end-to-end with a Preview-then-Publish workflow. Includes recipes for GA4 custom events, scroll-depth, Meta Pixel custom events, and consent mode.",
+      "version": "1.0.0",
+      "category": "analytics",
+      "tags": ["browser-automation", "gtm", "google-tag-manager", "analytics", "ga4", "tracking"]
     }
   ]
 }

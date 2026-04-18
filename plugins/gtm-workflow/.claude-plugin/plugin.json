@@ -1,0 +1,9 @@
+{
+  "name": "gtm-workflow",
+  "description": "Drives Google Tag Manager via browser automation: inspect containers, verify events fire correctly, add/edit tags and triggers, preview and publish versions safely. Uses chrome-devtools-mcp, never handles credentials.",
+  "version": "1.0.0",
+  "author": {
+    "name": "N-O-P-E"
+  },
+  "tags": ["browser-automation", "gtm", "google-tag-manager", "analytics", "ga4", "tracking"]
+}

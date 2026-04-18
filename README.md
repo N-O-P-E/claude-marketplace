@@ -48,6 +48,17 @@ Pointing a subdomain at a hosting platform means jumping between three tabs and 
 
 Good for: wiring a new subdomain to a Railway service, attaching a custom domain to a Vercel project, or any time you'd otherwise be alt-tabbing between Cloudflare and a deploy dashboard with a CNAME in your clipboard.
 
+### [gtm-workflow](plugins/gtm-workflow) — Google Tag Manager, automated
+
+Inspect, verify, edit, preview and publish GTM containers without clicking through the UI yourself. Reads the full container state so you can see what tags/triggers are wired where, injects a dataLayer hook on the live site to prove which events actually fire through to GA4 / Meta / Pinterest / Clarity, then drives the GTM UI end-to-end to add or fix tags with a Preview-then-Publish workflow.
+
+- **Inventory with smells flagged** — lists every tag, trigger, and variable; flags orphan tags, unused triggers, duplicate `page_view` loaders, and consent defaults that would fail GDPR.
+- **Proves events fire end-to-end** — captures every `dataLayer.push`, cross-refs with live network requests (GA4, Meta, Pinterest, TikTok, Clarity, Klaviyo, Shopify web pixels), and tells you which expected events didn't make it through.
+- **Ready-to-apply recipes** — GA4 custom events, scroll-depth, Meta Pixel custom events, Pinterest/TikTok tracking, consent mode, double-fire debugging — all click-by-click procedures the skill can execute or hand to you.
+- **Safe publish** — always stages in a workspace, always runs Preview + Tag Assistant validation first, always requires a version name + description so rollback via Versies is trivial.
+
+Good for: diagnosing why a tracked event isn't showing up in GA4, wiring new dataLayer events into analytics, adding scroll/Meta Pixel/Pinterest tracking across a batch of sites, cleaning up years of accumulated GTM cruft, or just understanding what's actually live in your container.
+
 ## Install
 
 Add the marketplace to Claude Code:
@@ -62,6 +73,7 @@ Install a plugin:
 /plugin install gcp-setup@nope-marketplace
 /plugin install search-console@nope-marketplace
 /plugin install cloudflare-connect@nope-marketplace
+/plugin install gtm-workflow@nope-marketplace
 ```
 
 ## Chrome DevTools MCP
